@@ -1,6 +1,10 @@
 
 CREATE TABLE com_logali_Products (
-  ID INTEGER NOT NULL,
+  ID NVARCHAR(36) NOT NULL,
+  createdAt TIMESTAMP_TEXT,
+  createdBy NVARCHAR(255),
+  modifiedAt TIMESTAMP_TEXT,
+  modifiedBy NVARCHAR(255),
   Name NVARCHAR(255) NOT NULL,
   Description NVARCHAR(255),
   ImageUrl NVARCHAR(255),
@@ -11,7 +15,7 @@ CREATE TABLE com_logali_Products (
   Width DECIMAL(16, 2),
   Depth DECIMAL(16, 2),
   Quantity DECIMAL(16, 2),
-  Supplier_Id NVARCHAR(36),
+  Supplier_ID NVARCHAR(36),
   UnitOfMeasures_Id NVARCHAR(2),
   DimensionUnits_Id NVARCHAR(2),
   Currency_Id NVARCHAR(3),
@@ -22,7 +26,11 @@ CREATE TABLE com_logali_Products (
 );
 
 CREATE TABLE com_logali_Suppliers (
-  Id NVARCHAR(36) NOT NULL,
+  ID NVARCHAR(36) NOT NULL,
+  createdAt TIMESTAMP_TEXT,
+  createdBy NVARCHAR(255),
+  modifiedAt TIMESTAMP_TEXT,
+  modifiedBy NVARCHAR(255),
   Name NVARCHAR(255) NOT NULL,
   Address_Street NVARCHAR(255),
   Address_City NVARCHAR(255),
@@ -32,7 +40,7 @@ CREATE TABLE com_logali_Suppliers (
   Email NVARCHAR(255),
   Phone NVARCHAR(255),
   Fax NVARCHAR(255),
-  PRIMARY KEY(Id)
+  PRIMARY KEY(ID)
 );
 
 CREATE TABLE com_logali_Categories (
@@ -44,6 +52,7 @@ CREATE TABLE com_logali_Categories (
 CREATE TABLE com_logali_StockAvailability (
   Id INTEGER NOT NULL,
   Description NVARCHAR(255),
+  Product_ID NVARCHAR(36),
   PRIMARY KEY(Id)
 );
 
@@ -73,20 +82,226 @@ CREATE TABLE com_logali_Months (
 );
 
 CREATE TABLE com_logali_ProductReview (
-  Id NVARCHAR(36) NOT NULL,
+  ID NVARCHAR(36) NOT NULL,
+  createdAt TIMESTAMP_TEXT,
+  createdBy NVARCHAR(255),
+  modifiedAt TIMESTAMP_TEXT,
+  modifiedBy NVARCHAR(255),
   Name NVARCHAR(255),
   Rating INTEGER,
   Comment NVARCHAR(255),
-  Product_ID INTEGER,
-  PRIMARY KEY(Id)
+  Product_ID NVARCHAR(36),
+  PRIMARY KEY(ID)
 );
 
 CREATE TABLE com_logali_SalesData (
-  DeliveryDate DATETIME_TEXT NOT NULL,
+  ID NVARCHAR(36) NOT NULL,
+  createdAt TIMESTAMP_TEXT,
+  createdBy NVARCHAR(255),
+  modifiedAt TIMESTAMP_TEXT,
+  modifiedBy NVARCHAR(255),
+  DeliveryDate DATETIME_TEXT,
   Revenue DECIMAL(16, 2),
-  Product_ID INTEGER,
+  Product_ID NVARCHAR(36),
   Currency_Id NVARCHAR(3),
   DeliveryMonth_Id NVARCHAR(2),
-  PRIMARY KEY(DeliveryDate)
+  PRIMARY KEY(ID)
 );
+
+CREATE TABLE com_logali_Course (
+  ID NVARCHAR(36)
+);
+
+CREATE TABLE com_logali_Student (
+  ID NVARCHAR(36)
+);
+
+CREATE TABLE com_logali_StudentCourse (
+  ID NVARCHAR(36)
+);
+
+CREATE TABLE com_logali_Orders (
+  ID NVARCHAR(36) NOT NULL,
+  Date DATE_TEXT,
+  Customer NVARCHAR(255),
+  PRIMARY KEY(ID)
+);
+
+CREATE TABLE com_logali_OrderItems (
+  ID NVARCHAR(36) NOT NULL,
+  Order_ID NVARCHAR(36),
+  Product_ID NVARCHAR(36),
+  Quantity INTEGER,
+  PRIMARY KEY(ID)
+);
+
+CREATE TABLE com_logali_Products_texts (
+  locale NVARCHAR(14) NOT NULL,
+  ID NVARCHAR(36) NOT NULL,
+  Name NVARCHAR(255) NOT NULL,
+  Description NVARCHAR(255),
+  PRIMARY KEY(locale, ID)
+);
+
+CREATE TABLE com_logali_Categories_texts (
+  locale NVARCHAR(14) NOT NULL,
+  Id NVARCHAR(1) NOT NULL,
+  Name NVARCHAR(255),
+  PRIMARY KEY(locale, Id)
+);
+
+CREATE TABLE com_logali_StockAvailability_texts (
+  locale NVARCHAR(14) NOT NULL,
+  Id INTEGER NOT NULL,
+  Description NVARCHAR(255),
+  PRIMARY KEY(locale, Id)
+);
+
+CREATE TABLE com_logali_Currencies_texts (
+  locale NVARCHAR(14) NOT NULL,
+  Id NVARCHAR(3) NOT NULL,
+  Description NVARCHAR(255),
+  PRIMARY KEY(locale, Id)
+);
+
+CREATE TABLE com_logali_UnitOfMeasures_texts (
+  locale NVARCHAR(14) NOT NULL,
+  Id NVARCHAR(2) NOT NULL,
+  Description NVARCHAR(255),
+  PRIMARY KEY(locale, Id)
+);
+
+CREATE TABLE com_logali_DimensionUnits_texts (
+  locale NVARCHAR(14) NOT NULL,
+  Id NVARCHAR(2) NOT NULL,
+  Description NVARCHAR(255),
+  PRIMARY KEY(locale, Id)
+);
+
+CREATE TABLE com_logali_Months_texts (
+  locale NVARCHAR(14) NOT NULL,
+  Id NVARCHAR(2) NOT NULL,
+  Description NVARCHAR(255),
+  ShortDescription NVARCHAR(3),
+  PRIMARY KEY(locale, Id)
+);
+
+CREATE TABLE com_logali_Suppliers_texts (
+  locale NVARCHAR(14) NOT NULL,
+  ID NVARCHAR(36) NOT NULL,
+  Name NVARCHAR(255) NOT NULL,
+  PRIMARY KEY(locale, ID)
+);
+
+CREATE VIEW localized_com_logali_Products AS SELECT
+  L_0.ID,
+  L_0.createdAt,
+  L_0.createdBy,
+  L_0.modifiedAt,
+  L_0.modifiedBy,
+  coalesce(localized_1.Name, L_0.Name) AS Name,
+  coalesce(localized_1.Description, L_0.Description) AS Description,
+  L_0.ImageUrl,
+  L_0.ReleaseDate,
+  L_0.DiscontinuedDate,
+  L_0.Price,
+  L_0.Height,
+  L_0.Width,
+  L_0.Depth,
+  L_0.Quantity,
+  L_0.Supplier_ID,
+  L_0.UnitOfMeasures_Id,
+  L_0.DimensionUnits_Id,
+  L_0.Currency_Id,
+  L_0.Category_Id,
+  L_0.PriceCondition,
+  L_0.PriceDetermination
+FROM (com_logali_Products AS L_0 LEFT JOIN com_logali_Products_texts AS localized_1 ON localized_1.ID = L_0.ID AND localized_1.locale = session_context( '$user.locale' ));
+
+CREATE VIEW localized_com_logali_Suppliers AS SELECT
+  L_0.ID,
+  L_0.createdAt,
+  L_0.createdBy,
+  L_0.modifiedAt,
+  L_0.modifiedBy,
+  coalesce(localized_1.Name, L_0.Name) AS Name,
+  L_0.Address_Street,
+  L_0.Address_City,
+  L_0.Address_State,
+  L_0.Address_PostalCode,
+  L_0.Address_Country,
+  L_0.Email,
+  L_0.Phone,
+  L_0.Fax
+FROM (com_logali_Suppliers AS L_0 LEFT JOIN com_logali_Suppliers_texts AS localized_1 ON localized_1.ID = L_0.ID AND localized_1.locale = session_context( '$user.locale' ));
+
+CREATE VIEW localized_com_logali_Categories AS SELECT
+  L_0.Id,
+  coalesce(localized_1.Name, L_0.Name) AS Name
+FROM (com_logali_Categories AS L_0 LEFT JOIN com_logali_Categories_texts AS localized_1 ON localized_1.Id = L_0.Id AND localized_1.locale = session_context( '$user.locale' ));
+
+CREATE VIEW localized_com_logali_StockAvailability AS SELECT
+  L_0.Id,
+  coalesce(localized_1.Description, L_0.Description) AS Description,
+  L_0.Product_ID
+FROM (com_logali_StockAvailability AS L_0 LEFT JOIN com_logali_StockAvailability_texts AS localized_1 ON localized_1.Id = L_0.Id AND localized_1.locale = session_context( '$user.locale' ));
+
+CREATE VIEW localized_com_logali_Currencies AS SELECT
+  L_0.Id,
+  coalesce(localized_1.Description, L_0.Description) AS Description
+FROM (com_logali_Currencies AS L_0 LEFT JOIN com_logali_Currencies_texts AS localized_1 ON localized_1.Id = L_0.Id AND localized_1.locale = session_context( '$user.locale' ));
+
+CREATE VIEW localized_com_logali_UnitOfMeasures AS SELECT
+  L_0.Id,
+  coalesce(localized_1.Description, L_0.Description) AS Description
+FROM (com_logali_UnitOfMeasures AS L_0 LEFT JOIN com_logali_UnitOfMeasures_texts AS localized_1 ON localized_1.Id = L_0.Id AND localized_1.locale = session_context( '$user.locale' ));
+
+CREATE VIEW localized_com_logali_DimensionUnits AS SELECT
+  L_0.Id,
+  coalesce(localized_1.Description, L_0.Description) AS Description
+FROM (com_logali_DimensionUnits AS L_0 LEFT JOIN com_logali_DimensionUnits_texts AS localized_1 ON localized_1.Id = L_0.Id AND localized_1.locale = session_context( '$user.locale' ));
+
+CREATE VIEW localized_com_logali_Months AS SELECT
+  L_0.Id,
+  coalesce(localized_1.Description, L_0.Description) AS Description,
+  coalesce(localized_1.ShortDescription, L_0.ShortDescription) AS ShortDescription
+FROM (com_logali_Months AS L_0 LEFT JOIN com_logali_Months_texts AS localized_1 ON localized_1.Id = L_0.Id AND localized_1.locale = session_context( '$user.locale' ));
+
+CREATE VIEW localized_com_logali_ProductReview AS SELECT
+  L.ID,
+  L.createdAt,
+  L.createdBy,
+  L.modifiedAt,
+  L.modifiedBy,
+  L.Name,
+  L.Rating,
+  L.Comment,
+  L.Product_ID
+FROM com_logali_ProductReview AS L;
+
+CREATE VIEW localized_com_logali_SalesData AS SELECT
+  L.ID,
+  L.createdAt,
+  L.createdBy,
+  L.modifiedAt,
+  L.modifiedBy,
+  L.DeliveryDate,
+  L.Revenue,
+  L.Product_ID,
+  L.Currency_Id,
+  L.DeliveryMonth_Id
+FROM com_logali_SalesData AS L;
+
+CREATE VIEW localized_com_logali_OrderItems AS SELECT
+  L.ID,
+  L.Order_ID,
+  L.Product_ID,
+  L.Quantity
+FROM com_logali_OrderItems AS L;
+
+CREATE VIEW localized_com_logali_Orders AS SELECT
+  L.ID,
+  L.Date,
+  L.Customer
+FROM com_logali_Orders AS L;
 
