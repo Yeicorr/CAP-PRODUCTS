@@ -1,29 +1,32 @@
 #Get Orders
-# GET http://localhost:4004/manage-orders/Orders;
+GET http://localhost:4004/manage-orders/GetOrders;
 
-# #Get Order
-# GET http://localhost:4004/manage-orders/Orders('client1@client1.com');
+#Get Order
+GET http://localhost:4004/manage-orders/GetOrders('client1@client1.com');
 
-# #Create Order
-# POST http://localhost:4004/manage-orders/Orders HTTP/1.1
-# Content-Type: application/json
-# {
-#     "ClientEmail": "client5@client5.com",
-#     "FirstName": "Lorena",
-#     "LastName": "Garcia",
-#     "CreatedOn": "2024-10-10"
-# } 
+#Create Order
+POST http://localhost:4004/manage-orders/CreateOrder HTTP/1.1
+Content-Type: application/json
+{
+    "ClientEmail": "client5@client5.com",
+    "FirstName": "Lorena",
+    "LastName": "Garcia",
+    "CreatedOn": "2024-10-10"
+} 
 
-# #Update Order
-# PUT http://localhost:4004/manage-orders/Orders('client1@client1.com') HTTP/1.1
-# Content-Type: application/json
-# {
-#      "FirstName": "First Name Updated",
-#      "LastName": "Last Name Updated",
-# }
+#Update Order
+PUT http://localhost:4004/manage-orders/UpdateOrder('client1@client1.com') HTTP/1.1
+Content-Type: application/json
+{
+     "FirstName": "First Name Updated",
+     "LastName": "Last Name Updated",
+}
 
-# #Delete Order
-# DELETE http://localhost:4004/manage-orders/Orders('client5@client5.com') HTTP/1.1
+#Delete Order
+DELETE http://localhost:4004/manage-orders/DeleteOrder('client5@client5.com') HTTP/1.1
 
 #Get Customer Rate - Function
-GET http://localhost:4004/manage-orders/Orders/getClientTaxRate(clientEmail: 'client1@client1.com')
+GET http://localhost:4004/manage-orders/Orders/getClientTaxRate(clientEmail='client1@client1.com')
+
+#Get Incidents
+GET http://localhost:4004/sapbackend-exit/Incidents;
